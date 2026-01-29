@@ -1,0 +1,16 @@
+---
+BasedOnStyle: Chromium
+IndentWidth: 4
+# Ensure this matches IndentWidth to avoid mixed tab/space confusion
+TabWidth: 4 
+# Set this to 0 to strictly enforce spaces, or match IndentWidth if you allow tabs
+UseTab: Never 
+
+# Clang-format usually forces a break after a semicolon.
+# These settings allow SOME single-line blocks (like "if (a) return;")
+# but they won't fix multiple variables on one line.
+AllowShortBlocksOnASingleLine: Always
+AllowShortFunctionsOnASingleLine: All
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortLoopsOnASingleLine: true
+---
