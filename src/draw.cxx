@@ -63,6 +63,54 @@ void clear_image(std::vector<std::tuple<float, float, float>> &image, int width,
     }
 }
 
+void draw_or(std::vector<std::tuple<float, float, float>> &image, int width,
+             int height) {
+
+    std::tuple<float, float, float> color;
+    int c = 0;
+
+    for (int y = 0; y < width; ++y) {
+        for (int x = 0; x < width; ++x) {
+            c = x | y;
+            color = std::make_tuple(float(c / 255.0f), float(c / 255.0f),
+                                    float(c / 255.0f));
+            image[get_index(x, y, width)] = color;
+        }
+    }
+}
+
+void draw_and(std::vector<std::tuple<float, float, float>> &image, int width,
+              int height) {
+
+    std::tuple<float, float, float> color;
+    int c = 0;
+
+    for (int y = 0; y < width; ++y) {
+        for (int x = 0; x < width; ++x) {
+            c = x & y;
+            color = std::make_tuple(float(c / 255.0f), float(c / 255.0f),
+                                    float(c / 255.0f));
+            image[get_index(x, y, width)] = color;
+        }
+    }
+}
+
+void draw_xor(std::vector<std::tuple<float, float, float>> &image, int width,
+              int height) {
+
+    std::tuple<float, float, float> color;
+    int c = 0;
+
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            c = x ^ y;
+            color = std::make_tuple(float(c / 255.0f), float(c / 255.0f),
+                                    float(c / 255.0f));
+            image[get_index(x, y, width)] = color;
+        }
+    }
+}
+
 static void update_x_and_y(int r, std::tuple<int, int> &walk1,
                            std::tuple<int, int> &walk2, int width, int height) {
 

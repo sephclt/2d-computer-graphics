@@ -37,6 +37,22 @@ int main() {
     print_message("Drawn walker draw to image2");
 
     save_image(image2, width, height, filename2);
+    print_message(std::format("Successfully saved image {}", filename2));
+
+    // XOR, AND, OR draw
+    std::vector<std::tuple<float, float, float>> texture_image;
+
+    texture_image.resize(width * height);
+    print_message(std::format("TextureImage resized to {}", width * height));
+
+    clear_image(texture_image, width, height, color);
+
+    draw_xor(texture_image, width, height);
+    print_message("Drawn xor draw to image2");
+
+    save_image(texture_image, width, height, "TextureImage.ppm");
+    print_message(
+        std::format("Successfully saved image {}", "TextureImage.ppm"));
 
     return 0;
 }

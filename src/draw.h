@@ -13,3 +13,12 @@ void clear_image(std::vector<std::tuple<float, float, float>> &image, int width,
 
 static void update_x_and_y(int r, std::tuple<int, int> &walk1,
                            std::tuple<int, int> &walk2, int width, int height);
+
+void draw_or(std::vector<std::tuple<float, float, float>> &image, int width,
+             int height);
+
+void draw_and(std::vector<std::tuple<float, float, float>> &image, int width,
+              int height);
+
+void draw_xor(std::vector<std::tuple<float, float, float>> &image, int width,
+              int height);
