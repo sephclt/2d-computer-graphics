@@ -1,4 +1,7 @@
 #include "draw.h"
+#include "utils.h"
+#include <random>
+#include <tuple>
 
 void first_draw(std::vector<std::tuple<float, float, float>> &image, int width,
                 int height) {
@@ -18,6 +21,38 @@ void first_draw(std::vector<std::tuple<float, float, float>> &image, int width,
     }
 }
 
+void walker_draw(std::vector<std::tuple<float, float, float>> &image1,
+                 std::vector<std::tuple<float, float, float>> &image2,
+                 int width, int height) {
+
+    std::tuple<float, float, float> color;
+    int x1 = width / 2;
+    int y1 = height / 2;
+    int x2 = width / 2;
+    int y2 = height / 2;
+
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_int_distribution<> dist(0, 3);
+
+    std::tuple<int, int> walk1 = std::make_tuple(x1, y1);
+    std::tuple<int, int> walk2 = std::make_tuple(x2, y2);
+
+    int r = 0;
+    for (int i = 0; i < 100000; ++i) {
+        r = dist(mt);
+        update_x_and_y(r, walk1, walk2, width, height);
+        color =
+            image1[get_index(std::get<0>(walk1), std::get<1>(walk1), width)];
+        image2[get_index(std::get<0>(walk1), std::get<1>(walk1), width)] =
+            color;
+        color =
+            image1[get_index(std::get<0>(walk2), std::get<1>(walk2), width)];
+        image2[get_index(std::get<0>(walk2), std::get<1>(walk2), width)] =
+            color;
+    }
+}
+
 void clear_image(std::vector<std::tuple<float, float, float>> &image, int width,
                  int height, std::tuple<float, float, float> &color) {
 
@@ -27,3 +62,53 @@ void clear_image(std::vector<std::tuple<float, float, float>> &image, int width,
         }
     }
 }
+
+static void update_x_and_y(int r, std::tuple<int, int> &walk1,
+                           std::tuple<int, int> &walk2, int width, int height) {
+
+    int x1, y1, x2, y2;
+    std::tie(x1, y1) = walk1;
+    std::tie(x2, y2) = walk2;
+
+    switch (r) {
+    case 0:
+        x1 += 1;
+        x2 -= 1;
+        break;
+    case 1:
+        x1 -= 1;
+        x2 += 1;
+        break;
+    case 2:
+        y1 += 1;
+        y2 -= 1;
+        break;
+    case 3:
+        y1 -= 1;
+        y2 += 1;
+        break;
+    }
+
+    if (x1 < 0)
+        x1 = 0;
+    else if (x1 > width - 1)
+        x1 = width - 1;
+
+    if (x2 < 0)
+        x2 = 0;
+    else if (x2 > width - 1)
+        x2 = width - 1;
+
+    if (y1 < 0)
+        y1 = 0;
+    else if (y1 > height - 1)
+        y1 = height - 1;
+
+    if (y2 < 0)
+        y2 = 0;
+    else if (y2 > height - 1)
+        y2 = height - 1;
+
+    walk1 = std::make_tuple(x1, y1);
+    walk2 = std::make_tuple(x2, y2);
+};

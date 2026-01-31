@@ -4,5 +4,12 @@
 void first_draw(std::vector<std::tuple<float, float, float>> &image, int width,
                 int height);
 
+void walker_draw(std::vector<std::tuple<float, float, float>> &image1,
+                 std::vector<std::tuple<float, float, float>> &image2,
+                 int width, int height);
+
 void clear_image(std::vector<std::tuple<float, float, float>> &image, int width,
                  int height, std::tuple<float, float, float> &color);
+
+static void update_x_and_y(int r, std::tuple<int, int> &walk1,
+                           std::tuple<int, int> &walk2, int width, int height);
