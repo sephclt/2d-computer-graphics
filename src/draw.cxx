@@ -111,6 +111,52 @@ void draw_xor(std::vector<std::tuple<float, float, float>> &image, int width,
     }
 }
 
+void generate_cloud(std::vector<std::tuple<float, float, float>> &image,
+                    int width, int height, std::vector<double> &noise) {
+
+    std::tuple<float, float, float> color;
+    int c = 0;
+
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            c = int(turbulence(double(x), double(y), width, height, 64, noise));
+            color = std::make_tuple(float(c / 255.0f), float(c / 255.0f),
+                                    float(c / 255.0f));
+            image[get_index(x, y, width)] = color;
+        }
+    }
+}
+
+void generate_marble(std::vector<std::tuple<float, float, float>> &image,
+                     int width, int height, std::vector<double> &noise) {
+
+    std::tuple<float, float, float> color;
+
+    double periodX = 5.0;
+    double periodY = 10.0;
+
+    double turbulencePower = 5.0;
+    double turbulenceSize = 32.0;
+
+    double xy_value = 0.0;
+    double sine_value = 0.0;
+
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            xy_value = x * periodX / width + y * periodY / height +
+                       turbulencePower *
+                           turbulence(double(x), double(y), width, height,
+                                      turbulenceSize, noise) /
+                           255.0;
+            sine_value = 256 * fabs(sin(xy_value * M_PI));
+            color = std::make_tuple(float(sine_value / 255.0f),
+                                    float(sine_value / 255.0f),
+                                    float(sine_value / 255.0f));
+            image[get_index(x, y, width)] = color;
+        }
+    }
+}
+
 static void update_x_and_y(int r, std::tuple<int, int> &walk1,
                            std::tuple<int, int> &walk2, int width, int height) {
 

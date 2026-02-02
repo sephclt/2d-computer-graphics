@@ -22,3 +22,9 @@ void draw_and(std::vector<std::tuple<float, float, float>> &image, int width,
 
 void draw_xor(std::vector<std::tuple<float, float, float>> &image, int width,
               int height);
+
+void generate_cloud(std::vector<std::tuple<float, float, float>> &image,
+                    int width, int height, std::vector<double> &noise);
+
+void generate_marble(std::vector<std::tuple<float, float, float>> &image,
+                     int width, int height, std::vector<double> &noise);
