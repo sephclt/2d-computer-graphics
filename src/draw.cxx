@@ -1,5 +1,6 @@
 #include "draw.h"
 #include "utils.h"
+#include <cmath>
 #include <random>
 #include <tuple>
 
@@ -156,6 +157,38 @@ void generate_marble(std::vector<std::tuple<float, float, float>> &image,
         }
     }
 }
+
+void generate_wood(std::vector<std::tuple<float, float, float>> &image,
+                   int width, int height, std::vector<double> &noise) {
+
+    std::tuple<float, float, float> color;
+
+    double xy_period = 25.0;
+    double turbulence_power = 0.1;
+    double turbulence_size = 32.0;
+
+    double sine_value = 0.0;
+    double dist_value = 0.0;
+    double x_value = 0.0;
+    double y_value = 0.0;
+
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            x_value = (x - width / 2) / double(width);
+            y_value = (y - height / 2) / double(height);
+            dist_value = sqrt(x_value * x_value + y_value * y_value) +
+                         turbulence_power *
+                             turbulence(double(x), double(y), width, height,
+                                        turbulence_size, noise) /
+                             255.0f;
+            sine_value = 128.0 * fabs(sin(2 * xy_period * dist_value * M_PI));
+            color = std::make_tuple(float((80 + sine_value) / 255.0f),
+                                    float((30 + sine_value) / 255.0f),
+                                    float(30.0f / 255.0f));
+            image[get_index(x, y, width)] = color;
+        }
+    }
+};
 
 static void update_x_and_y(int r, std::tuple<int, int> &walk1,
                            std::tuple<int, int> &walk2, int width, int height) {

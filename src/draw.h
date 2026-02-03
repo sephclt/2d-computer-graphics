@@ -28,3 +28,6 @@ void generate_cloud(std::vector<std::tuple<float, float, float>> &image,
 
 void generate_marble(std::vector<std::tuple<float, float, float>> &image,
                      int width, int height, std::vector<double> &noise);
+
+void generate_wood(std::vector<std::tuple<float, float, float>> &image,
+                   int width, int height, std::vector<double> &noise);

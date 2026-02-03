@@ -87,5 +87,11 @@ int main() {
     save_image(image, width, height, "MarbleTexture.ppm");
     print_message("Saved Image MarbleTexture.ppm");
 
+    // Generate Wood Texture
+    generate_wood(image, width, height, noise);
+    print_message("Generated Wood Texture");
+    save_image(image, width, height, "WoodTexture.ppm");
+    print_message("Saved Image WoodTexture.ppm");
+
     return 0;
 }
