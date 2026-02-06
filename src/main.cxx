@@ -6,7 +6,7 @@
 int main() {
 
     std::string in_filename = "SampleImage.ppm";
-    std::string out_filename = "NegativeSampleImage.ppm";
+    std::string out_filename = "DarkenedSampleImage.ppm";
 
     Image image;
     image.width = 500;
@@ -15,7 +15,7 @@ int main() {
 
     read_image(image);
 
-    negative_image(image);
+    darken_image(image);
 
     save_image(image, out_filename);
 
