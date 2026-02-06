@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 
 int get_index(int x, int y, int width);
