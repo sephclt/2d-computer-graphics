@@ -1,4 +1,6 @@
 #include "file_manager.h"
+#include "logging.h"
+#include <format>
 #include <fstream>
 
 void save_image(std::vector<std::tuple<float, float, float>> &image, int width,
@@ -16,6 +18,28 @@ void save_image(std::vector<std::tuple<float, float, float>> &image, int width,
             << int(std::get<1>(color) * 255.0f) << " "
             << int(std::get<2>(color) * 255.0f) << "\n";
     }
+    out.close();
+}
+
+void save_image(Image &image, std::string filename) {
+
+    std::tuple<float, float, float> color;
+    std::ofstream out(filename, std::ofstream::out);
+
+    print_message(std::format("Saving Image: {}", filename));
+
+    // Write P3
+    out << "P3\n" << image.width << " " << image.height << "\n255\n";
+
+    for (int i = 0; i < (image.width * image.height); ++i) {
+        color = image.image[i];
+        out << int(std::get<0>(color) * 255.0f) << " "
+            << int(std::get<1>(color) * 255.0f) << " "
+            << int(std::get<2>(color) * 255.0f) << "\n";
+    }
+
+    print_message(std::format("Done Saving Image: {}", filename));
+
     out.close();
 }
 
@@ -49,13 +73,58 @@ void read_image(std::vector<std::tuple<float, float, float>> &image, int &width,
 
         if (!(line.compare("255") == 0) && state == 3) {
             r_color = get_color(line);
-            w_color = std::make_tuple(float(std::get<0>(r_color) * 255.0f),
-                                      float(std::get<1>(r_color) * 255.0f),
-                                      float(std::get<2>(r_color) * 255.0f));
+            w_color = std::make_tuple(float(std::get<0>(r_color) / 255.0f),
+                                      float(std::get<1>(r_color) / 255.0f),
+                                      float(std::get<2>(r_color) / 255.0f));
             image.push_back(w_color);
             done = true;
         }
     }
+
+    infile.close();
+}
+
+void read_image(Image &image) {
+
+    std::ifstream infile(image.filename);
+    std::tuple<int, int, int> r_color;
+    std::tuple<float, float, float> w_color;
+    std::tuple<int, int> width_and_height;
+
+    int state = 0;
+    bool done = false;
+    std::string line;
+
+    print_message(std::format("Reading Image: {}", image.filename));
+
+    while (std::getline(infile, line)) {
+        if (start_with_case_insensitive(line, "P3") && state == 0) {
+            state = 1;
+        }
+
+        if (!start_with_case_insensitive(line, "#") &&
+            !start_with_case_insensitive(line, "P3") && state == 1) {
+            width_and_height = get_width_and_height(line);
+            image.width = std::get<0>(width_and_height);
+            image.height = std::get<1>(width_and_height);
+            state = 2;
+        }
+
+        if (start_with_case_insensitive(line, "255") && state == 2) {
+            state = 3;
+        }
+
+        if (!(line.compare("255") == 0) && state == 3) {
+            r_color = get_color(line);
+            w_color = std::make_tuple(float(std::get<0>(r_color) / 255.0f),
+                                      float(std::get<1>(r_color) / 255.0f),
+                                      float(std::get<2>(r_color) / 255.0f));
+            image.image.push_back(w_color);
+            done = true;
+        }
+    }
+
+    print_message(std::format("Done Reading Image: {}", image.filename));
 
     infile.close();
 }
