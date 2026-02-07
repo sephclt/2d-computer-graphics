@@ -116,3 +116,23 @@ void subtract_image(Image &image, float value) {
 
     print_message(std::format("Done Manipulating Image {}", image.filename));
 }
+
+void greyscale_image(Image &image) {
+
+    print_message(std::format("Greyscaling Image {}", image.filename));
+
+    std::tuple<float, float, float> color;
+    float c = 0.0f;
+
+    for (int y = 0; y < image.height; ++y) {
+        for (int x = 0; x < image.width; ++x) {
+            color = image.image[get_index(x, y, image.width)];
+            c = (0.2126 * std::get<0>(color)) + (0.7152 * std::get<1>(color)) +
+                (0.0722 * std::get<2>(color));
+            image.image[get_index(x, y, image.width)] =
+                std::make_tuple(c, c, c);
+        }
+    }
+
+    print_message(std::format("Done Manipulating Image {}", image.filename));
+}

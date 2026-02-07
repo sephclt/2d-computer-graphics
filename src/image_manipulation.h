@@ -17,3 +17,5 @@ void brighten_image_add(Image &image, float value);
 void brighten_image_multiply(Image &image, float value);
 
 void subtract_image(Image &image, float value);
+
+void greyscale_image(Image &image);
