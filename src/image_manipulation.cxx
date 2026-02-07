@@ -3,6 +3,7 @@
 #include "utils.h"
 #include <algorithm>
 #include <format>
+#include <stdexcept>
 #include <tuple>
 
 void negative_image(Image &image) {
@@ -135,4 +136,35 @@ void greyscale_image(Image &image) {
     }
 
     print_message(std::format("Done Manipulating Image {}", image.filename));
+}
+
+void blend_image(Image &image_1, Image &image_2, float alpha) {
+
+    print_message(std::format("Blending Image {} and Image {}",
+                              image_1.filename, image_2.filename));
+
+    if (image_1.width != image_2.width)
+        throw std::runtime_error("Images have different dimensions!");
+
+    std::tuple<float, float, float> color_1;
+    std::tuple<float, float, float> color_2;
+    float r = 0.0f, g = 0.0f, b = 0.0f;
+
+    for (int y = 0; y < image_1.height; ++y) {
+        for (int x = 0; x < image_1.width; ++x) {
+            color_1 = image_1.image[get_index(x, y, image_1.width)];
+            color_2 = image_2.image[get_index(x, y, image_2.width)];
+            r = (std::get<0>(color_2) * alpha) +
+                (std::get<0>(color_1) * (1.0f - alpha));
+            g = (std::get<1>(color_2) * alpha) +
+                (std::get<1>(color_1) * (1.0f - alpha));
+            b = (std::get<2>(color_2) * alpha) +
+                (std::get<2>(color_1) * (1.0f - alpha));
+            image_1.image[get_index(x, y, image_1.width)] =
+                std::make_tuple(r, g, b);
+        }
+    }
+
+    print_message(std::format("Done Blending Image {} and Image {}",
+                              image_1.filename, image_2.filename));
 }
