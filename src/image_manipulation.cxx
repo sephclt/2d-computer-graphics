@@ -1,6 +1,7 @@
 #include "image_manipulation.h"
 #include "logging.h"
 #include "utils.h"
+#include <algorithm>
 #include <format>
 #include <tuple>
 
@@ -46,4 +47,72 @@ void darken_image(Image &image, DarkenValue value) {
     }
 
     print_message(std::format("Done Manipulating Image: {}", image.filename));
+}
+
+void brighten_image(Image &image, BrightenType type, float value) {
+
+    print_message(std::format("Brightening Image: {}", image.filename));
+
+    if (type == BrightenType::MULTIPLY)
+        brighten_image_multiply(image, value);
+    else
+        brighten_image_add(image, value);
+
+    print_message(std::format("Done Manipulating Image: {}", image.filename));
+}
+
+void brighten_image_multiply(Image &image, float value) {
+
+    std::tuple<float, float, float> old_color;
+    std::tuple<float, float, float> new_color;
+
+    for (int y = 0; y < image.height; ++y) {
+        for (int x = 0; x < image.width; ++x) {
+            old_color = image.image[get_index(x, y, image.width)];
+            new_color = std::make_tuple(
+                std::clamp(std::get<0>(old_color) * value, 0.0f, 1.0f),
+                std::clamp(std::get<1>(old_color) * value, 0.0f, 1.0f),
+                std::clamp(std::get<2>(old_color) * value, 0.0f, 1.0f));
+            image.image[get_index(x, y, image.width)] = new_color;
+        }
+    }
+}
+
+void brighten_image_add(Image &image, float value) {
+
+    std::tuple<float, float, float> old_color;
+    std::tuple<float, float, float> new_color;
+
+    for (int y = 0; y < image.height; ++y) {
+        for (int x = 0; x < image.width; ++x) {
+            old_color = image.image[get_index(x, y, image.width)];
+            new_color = std::make_tuple(
+                std::clamp(std::get<0>(old_color) + value, 0.0f, 1.0f),
+                std::clamp(std::get<1>(old_color) + value, 0.0f, 1.0f),
+                std::clamp(std::get<2>(old_color) + value, 0.0f, 1.0f));
+            image.image[get_index(x, y, image.width)] = new_color;
+        }
+    }
+}
+
+void subtract_image(Image &image, float value) {
+
+    print_message(
+        std::format("Subtracting {} to Image {}", value, image.filename));
+
+    std::tuple<float, float, float> old_color;
+    std::tuple<float, float, float> new_color;
+
+    for (int y = 0; y < image.height; ++y) {
+        for (int x = 0; x < image.width; ++x) {
+            old_color = image.image[get_index(x, y, image.width)];
+            new_color = std::make_tuple(
+                std::clamp(std::get<0>(old_color) - value, 0.0f, 1.0f),
+                std::clamp(std::get<1>(old_color) - value, 0.0f, 1.0f),
+                std::clamp(std::get<2>(old_color) - value, 0.0f, 1.0f));
+            image.image[get_index(x, y, image.width)] = new_color;
+        }
+    }
+
+    print_message(std::format("Done Manipulating Image {}", image.filename));
 }
