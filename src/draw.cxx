@@ -1,8 +1,32 @@
 #include "draw.h"
+#include "file_manager.h"
+#include "logging.h"
+#include "structs.h"
 #include "utils.h"
 #include <cmath>
+#include <format>
 #include <random>
 #include <tuple>
+
+void generate_image(int width = 500, int height = 500,
+                    std::string filename = "SampleImage.ppm",
+                    SampleImageType imageType = SampleImageType::GRADIENT) {
+
+    print_message(std::format("Generating image {}", filename));
+
+    std::tuple<float, float, float> color =
+        std::make_tuple(0.0f, 0.0f, 0.066667f);
+
+    Image image{filename, width, height};
+    image.image.resize(width * height);
+
+    clear_image(image.image, image.width, image.height, color);
+
+    if (imageType == SampleImageType::GRADIENT)
+        first_draw(image.image, image.width, image.height);
+
+    save_image(image);
+};
 
 void first_draw(std::vector<std::tuple<float, float, float>> &image, int width,
                 int height) {

@@ -1,7 +1,13 @@
 #pragma once
 
+#include <string>
 #include <tuple>
 #include <vector>
+
+enum class SampleImageType { GRADIENT, WALKER, CLOUD, MARBLE, WOOD };
+
+void generate_image(int width, int height, std::string filename,
+                    SampleImageType imageType);
 
 void first_draw(std::vector<std::tuple<float, float, float>> &image, int width,
                 int height);

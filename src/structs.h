@@ -6,7 +6,7 @@
 
 struct Image {
     std::string filename;
-    std::vector<std::tuple<float, float, float>> image;
     int width;
     int height;
+    std::vector<std::tuple<float, float, float>> image;
 };

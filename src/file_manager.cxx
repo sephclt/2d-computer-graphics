@@ -21,12 +21,12 @@ void save_image(std::vector<std::tuple<float, float, float>> &image, int width,
     out.close();
 }
 
-void save_image(Image &image, std::string filename) {
+void save_image(Image &image) {
 
     std::tuple<float, float, float> color;
-    std::ofstream out(filename, std::ofstream::out);
+    std::ofstream out(image.filename, std::ofstream::out);
 
-    print_message(std::format("Saving Image: {}", filename));
+    print_message(std::format("Saving Image: {}", image.filename));
 
     // Write P3
     out << "P3\n" << image.width << " " << image.height << "\n255\n";
@@ -38,7 +38,7 @@ void save_image(Image &image, std::string filename) {
             << int(std::get<2>(color) * 255.0f) << "\n";
     }
 
-    print_message(std::format("Done Saving Image: {}", filename));
+    print_message(std::format("Done Saving Image: {}", image.filename));
 
     out.close();
 }
