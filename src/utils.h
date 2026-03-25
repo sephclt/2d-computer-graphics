@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include "draw.h"
 
 int get_index(int x, int y, int width);
 
@@ -11,3 +12,5 @@ double smooth_noise(double x, double y, int width, int height,
 
 double turbulence(double x, double y, int width, int height, double size,
                   std::vector<double> &noise);
+
+SampleImageType parseSampleImageTypeString(std::string type);

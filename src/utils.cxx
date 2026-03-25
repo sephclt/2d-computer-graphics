@@ -1,5 +1,9 @@
 #include "utils.h"
+#include "draw.h"
+#include <algorithm>
 #include <random>
+#include <string>
+#include <unordered_map>
 
 int get_index(int x, int y, int width) { return x + width * y; }
 
@@ -54,4 +58,26 @@ double turbulence(double x, double y, int width, int height, double size,
     }
 
     return (128.0 * value / initial_size);
+}
+
+SampleImageType parseSampleImageTypeString(std::string type) {
+
+    // Convert to lower case
+    std::transform(type.begin(), type.end(), type.begin(), ::tolower);
+
+    static const std::unordered_map<std::string, SampleImageType> typeMap = {
+        {"gradient", SampleImageType::GRADIENT},
+        {"walker", SampleImageType::WALKER},
+        {"cloud", SampleImageType::CLOUD},
+        {"marble", SampleImageType::MARBLE},
+        {"wood", SampleImageType::WOOD},
+    };
+
+    auto it = typeMap.find(type);
+
+    if (it != typeMap.end()) {
+        return it->second;
+    }
+
+    return SampleImageType::GRADIENT;
 }

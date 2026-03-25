@@ -1,6 +1,6 @@
 #include "draw.h"
 #include "file_manager.h"
-#include "stream.h"
+#include "utils.h"
 #include <cxxopts.hpp>
 #include <string>
 #include <tuple>
@@ -14,17 +14,11 @@ int main(int argc, char *argv[]) {
                           cxxopts::value<std::string>());
     options.add_options()(
         "t, type", "Sample image to be generated",
-        cxxopts::value<SampleImageType>(SampleImageType::GRADIENT)
+        cxxopts::value<std::string>()
             ->default_value("gradient"));
     options.add_options()("d, dimension",
                           "Dimension of the image to be generated",
                           cxxopts::value<std::string>());
-
-    // options.add_options()("f,file", "Open homebase with this file",
-    //                       cxxopts::value<std::string>()->default_value(""));
-    // options.add_options()(
-    //     "v,value", "Value to write",
-    //     cxxopts::value<std::string>()->default_value("Something"));
 
     auto result = options.parse(argc, argv);
 
@@ -35,10 +29,10 @@ int main(int argc, char *argv[]) {
 
         auto output = result["output"].as<std::string>();
 
-        auto type = result["type"].as<SampleImageType>();
+        auto type = result["type"].as<std::string>();
 
         generate_image(std::get<0>(width_and_height),
-                       std::get<1>(width_and_height), output, type);
+                       std::get<1>(width_and_height), output, parseSampleImageTypeString(type));
     }
 
     return 0;
