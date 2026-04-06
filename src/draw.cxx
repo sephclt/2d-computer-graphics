@@ -7,6 +7,7 @@
 #include <format>
 #include <random>
 #include <tuple>
+#include <vector>
 
 void generate_image(int width = 500, int height = 500,
                     std::string filename = "SampleImage.ppm",
@@ -24,6 +25,27 @@ void generate_image(int width = 500, int height = 500,
 
     if (imageType == SampleImageType::GRADIENT)
         first_draw(image.image, image.width, image.height);
+
+    std::vector<double> noise;
+    noise.resize(image.width * image.height);
+    generate_noise(noise, image.width, image.height);
+
+    switch (imageType) {
+        case SampleImageType::GRADIENT:
+            first_draw(image.image, image.width, image.height);
+            break;
+        case SampleImageType::CLOUD:
+            generate_cloud(image.image, image.width, image.height, noise);
+            break;
+        case SampleImageType::MARBLE:
+            generate_marble(image.image, image.width, image.height, noise);
+            break;
+        case SampleImageType::WOOD:
+            generate_wood(image.image, image.width, image.height, noise);
+            break;
+        default:
+            break;
+    }
 
     save_image(image);
 };
