@@ -6,4 +6,5 @@ target_include_directories(
 )
 
 add_subdirectory(sdl3)
+add_subdirectory(sdl_image)
 add_subdirectory(imgui)
