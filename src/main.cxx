@@ -153,6 +153,8 @@ int main(int, char**)
     // SETUP IMAGE TEXTURE
     ImageTexture image_texture;
     image_texture.filename = "SampleImage.ppm";
+    image_texture.width = 500;
+    image_texture.height = 500;
 
     SDL_Texture* sdl_image_texture = IMG_LoadTexture(renderer, image_texture.filename.c_str());
 
@@ -201,10 +203,10 @@ int main(int, char**)
         ImGui::Image((ImTextureID)(intptr_t)sdl_image_texture, ImVec2(500, 500));
 
         if (ImGui::Button("Generate Image")) {
-            // std::cout << "Generating New Image: " << image_type_list[current_selected_image_type_index] << std::endl;
-            // generate_image(image_texture, parseSampleImageTypeString(image_type_list[current_selected_image_type_index]));
+            std::cout << "Generating New Image: " << image_type_list[current_selected_image_type_index] << std::endl;
+            generate_image(image_texture, parseSampleImageTypeString(image_type_list[current_selected_image_type_index]));
             // generate_image(image_texture, SampleImageType::GRADIENT);
-            // sdl_image_texture = IMG_LoadTexture(renderer, image_texture.filename.c_str());
+            sdl_image_texture = IMG_LoadTexture(renderer, image_texture.filename.c_str());
         }
 
         ImGui::Combo("Image Type", &current_selected_image_type_index, image_type_list, IM_ARRAYSIZE(image_type_list));
