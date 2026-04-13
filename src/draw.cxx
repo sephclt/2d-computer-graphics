@@ -5,6 +5,7 @@
 #include "utils.h"
 #include <cmath>
 #include <format>
+#include <iostream>
 #include <random>
 #include <tuple>
 #include <vector>
@@ -50,30 +51,39 @@ void generate_image(int width = 500, int height = 500,
     save_image(image);
 };
 
-void generate_image(ImageTexture image_texture, SampleImageType imageType) {
+void generate_image(ImageTexture &image_texture, SampleImageType imageType) {
     // Resize Image
+    std::cout << "Resizing Image!\n";
     image_texture.image.resize(image_texture.width * image_texture.height);
 
+    std::cout << "Clearing Image!\n";
     clear_image(image_texture);
 
+    std::cout << "Generating Color!\n";
+    image_texture.color = std::make_tuple(0.0f, 0.0f, 0.066667f);
+
+    std::cout << "Generating Noise!\n";
+    image_texture.noise.resize(image_texture.width * image_texture.height);
     generate_noise(image_texture.noise, image_texture.width, image_texture.height);
 
     switch (imageType) {
         case SampleImageType::GRADIENT:
-            first_draw(image_texture.image, image_texture.width, image_texture.height);
+            generate_gradient(image_texture);
             break;
         case SampleImageType::CLOUD:
-            generate_cloud(image_texture.image, image_texture.width, image_texture.height, image_texture.noise);
+            generate_cloud(image_texture);
             break;
         case SampleImageType::MARBLE:
-            generate_marble(image_texture.image, image_texture.width, image_texture.height, image_texture.noise);
+            generate_marble(image_texture);
             break;
         case SampleImageType::WOOD:
-            generate_wood(image_texture.image, image_texture.width, image_texture.height, image_texture.noise);
+            generate_wood(image_texture);
             break;
         default:
             break;
     }
+
+    save_image(image_texture);
 }
 
 void first_draw(std::vector<std::tuple<float, float, float>> &image, int width,
@@ -193,6 +203,23 @@ void draw_xor(std::vector<std::tuple<float, float, float>> &image, int width,
     }
 }
 
+void generate_gradient(ImageTexture &image_texture) {
+    std::cout << "Generating Gradient Image\n";
+    std::tuple<float, float, float> color;
+    int ctr = 0;
+
+    for (int y = image_texture.height - 1; y >= 0; --y) {
+        for (int x = 0; x < image_texture.width; ++x) {
+            float r = float(x) / float(image_texture.width);
+            float g = float(y) / float(image_texture.height);
+            float b = 0.2;
+            color = std::make_tuple(r, g, b);
+            image_texture.image[ctr] = color;
+            ctr++;
+        }
+    }
+}
+
 void generate_cloud(std::vector<std::tuple<float, float, float>> &image,
                     int width, int height, std::vector<double> &noise) {
 
@@ -205,6 +232,21 @@ void generate_cloud(std::vector<std::tuple<float, float, float>> &image,
             color = std::make_tuple(float(c / 255.0f), float(c / 255.0f),
                                     float(c / 255.0f));
             image[get_index(x, y, width)] = color;
+        }
+    }
+}
+
+void generate_cloud(ImageTexture &image_texture) {
+
+    std::tuple<float, float, float> color;
+    int c = 0;
+
+    for (int y = 0; y < image_texture.height; ++y) {
+        for (int x = 0; x < image_texture.width; ++x) {
+            c = int(turbulence(double(x), double(y), image_texture.width, image_texture.height, 64, image_texture.noise));
+            color = std::make_tuple(float(c / 255.0f), float(c / 255.0f),
+                                    float(c / 255.0f));
+            image_texture.image[get_index(x, y, image_texture.width)] = color;
         }
     }
 }
@@ -239,6 +281,35 @@ void generate_marble(std::vector<std::tuple<float, float, float>> &image,
     }
 }
 
+void generate_marble(ImageTexture &image_texture) {
+
+    std::tuple<float, float, float> color;
+
+    double periodX = 5.0;
+    double periodY = 10.0;
+
+    double turbulencePower = 5.0;
+    double turbulenceSize = 32.0;
+
+    double xy_value = 0.0;
+    double sine_value = 0.0;
+
+    for (int y = 0; y < image_texture.height; ++y) {
+        for (int x = 0; x < image_texture.width; ++x) {
+            xy_value = x * periodX / image_texture.width + y * periodY / image_texture.height +
+                       turbulencePower *
+                           turbulence(double(x), double(y), image_texture.width, image_texture.height,
+                                      turbulenceSize, image_texture.noise) /
+                           255.0;
+            sine_value = 256 * fabs(sin(xy_value * M_PI));
+            color = std::make_tuple(float(sine_value / 255.0f),
+                                    float(sine_value / 255.0f),
+                                    float(sine_value / 255.0f));
+            image_texture.image[get_index(x, y, image_texture.width)] = color;
+        }
+    }
+}
+
 void generate_wood(std::vector<std::tuple<float, float, float>> &image,
                    int width, int height, std::vector<double> &noise) {
 
@@ -267,6 +338,37 @@ void generate_wood(std::vector<std::tuple<float, float, float>> &image,
                                     float((30 + sine_value) / 255.0f),
                                     float(30.0f / 255.0f));
             image[get_index(x, y, width)] = color;
+        }
+    }
+};
+
+void generate_wood(ImageTexture &image_texture) {
+
+    std::tuple<float, float, float> color;
+
+    double xy_period = 25.0;
+    double turbulence_power = 0.1;
+    double turbulence_size = 32.0;
+
+    double sine_value = 0.0;
+    double dist_value = 0.0;
+    double x_value = 0.0;
+    double y_value = 0.0;
+
+    for (int y = 0; y < image_texture.height; ++y) {
+        for (int x = 0; x < image_texture.width; ++x) {
+            x_value = (x - image_texture.width / 2) / double(image_texture.width);
+            y_value = (y - image_texture.height / 2) / double(image_texture.height);
+            dist_value = sqrt(x_value * x_value + y_value * y_value) +
+                         turbulence_power *
+                             turbulence(double(x), double(y), image_texture.width, image_texture.height,
+                                        turbulence_size, image_texture.noise) /
+                             255.0f;
+            sine_value = 128.0 * fabs(sin(2 * xy_period * dist_value * M_PI));
+            color = std::make_tuple(float((80 + sine_value) / 255.0f),
+                                    float((30 + sine_value) / 255.0f),
+                                    float(30.0f / 255.0f));
+            image_texture.image[get_index(x, y, image_texture.width)] = color;
         }
     }
 };

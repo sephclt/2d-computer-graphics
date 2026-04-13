@@ -10,7 +10,7 @@ enum class SampleImageType { GRADIENT, WALKER, CLOUD, MARBLE, WOOD };
 void generate_image(int width, int height, std::string filename,
                     SampleImageType imageType);
 
-void generate_image(ImageTexture image_texture, SampleImageType imageType);
+void generate_image(ImageTexture &image_texture, SampleImageType imageType);
 
 void first_draw(std::vector<std::tuple<float, float, float>> &image, int width,
                 int height);
@@ -36,11 +36,19 @@ void draw_and(std::vector<std::tuple<float, float, float>> &image, int width,
 void draw_xor(std::vector<std::tuple<float, float, float>> &image, int width,
               int height);
 
+void generate_gradient(ImageTexture &image_texture);
+
 void generate_cloud(std::vector<std::tuple<float, float, float>> &image,
                     int width, int height, std::vector<double> &noise);
+
+void generate_cloud(ImageTexture &image_texture);
 
 void generate_marble(std::vector<std::tuple<float, float, float>> &image,
                      int width, int height, std::vector<double> &noise);
 
+void generate_marble(ImageTexture &image_texture);
+
 void generate_wood(std::vector<std::tuple<float, float, float>> &image,
                    int width, int height, std::vector<double> &noise);
+
+void generate_wood(ImageTexture &image_texture);
