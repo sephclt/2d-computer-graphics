@@ -50,6 +50,32 @@ void generate_image(int width = 500, int height = 500,
     save_image(image);
 };
 
+void generate_image(ImageTexture image_texture, SampleImageType imageType) {
+    // Resize Image
+    image_texture.image.resize(image_texture.width * image_texture.height);
+
+    clear_image(image_texture);
+
+    generate_noise(image_texture.noise, image_texture.width, image_texture.height);
+
+    switch (imageType) {
+        case SampleImageType::GRADIENT:
+            first_draw(image_texture.image, image_texture.width, image_texture.height);
+            break;
+        case SampleImageType::CLOUD:
+            generate_cloud(image_texture.image, image_texture.width, image_texture.height, image_texture.noise);
+            break;
+        case SampleImageType::MARBLE:
+            generate_marble(image_texture.image, image_texture.width, image_texture.height, image_texture.noise);
+            break;
+        case SampleImageType::WOOD:
+            generate_wood(image_texture.image, image_texture.width, image_texture.height, image_texture.noise);
+            break;
+        default:
+            break;
+    }
+}
+
 void first_draw(std::vector<std::tuple<float, float, float>> &image, int width,
                 int height) {
 
@@ -106,6 +132,15 @@ void clear_image(std::vector<std::tuple<float, float, float>> &image, int width,
     for (int y = height; y > height; --y) {
         for (int x = 0; x <= width; ++x) {
             image[x + width * height] = color;
+        }
+    }
+}
+
+void clear_image(ImageTexture &image_texture) {
+
+    for (int y = image_texture.height; y > image_texture.height; --y) {
+        for (int x = 0; x <= image_texture.width; ++x) {
+            image_texture.image[x + image_texture.width * image_texture.height] = image_texture.color;
         }
     }
 }

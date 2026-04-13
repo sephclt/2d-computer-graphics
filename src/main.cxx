@@ -54,9 +54,14 @@
 #include "imgui.h"
 #include "imgui_impl_sdl3.h"
 #include "imgui_impl_sdlrenderer3.h"
+#include "structs.h"
+#include "utils.h"
 #include <cstdint>
+#include <iostream>
 #include <stdio.h>
 #include <SDL3/SDL.h>
+#include <string>
+#include <tuple>
 
 #ifdef __EMSCRIPTEN__
 #include "../libs/emscripten/emscripten_mainloop_stub.h"
@@ -135,11 +140,22 @@ int main(int, char**)
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-    SDL_Texture* texture = IMG_LoadTexture(renderer, "SampleImage.ppm");
-
     // Main loop
     bool done = false;
     bool open = true;
+
+    float noise_slider_value = 0.0f;
+    static char image_size[] = "500x500";
+
+    static int current_selected_image_type_index = 0;
+    const char* image_type_list[] = { "gradient", "cloud", "wood", "marble"};
+
+    // SETUP IMAGE TEXTURE
+    ImageTexture image_texture;
+    image_texture.filename = "SampleImage.ppm";
+
+    SDL_Texture* sdl_image_texture = IMG_LoadTexture(renderer, image_texture.filename.c_str());
+
 #ifdef __EMSCRIPTEN__
     // For an Emscripten build we are disabling file-system access, so let's not attempt to do a fopen() of the imgui.ini file.
     // You may manually call LoadIniSettingsFromMemory() to load settings from your own storage.
@@ -177,9 +193,25 @@ int main(int, char**)
         ImGui_ImplSDL3_NewFrame();
         ImGui::NewFrame();
 
+        ImGui::SetNextWindowSize(ImVec2(500 + 50, 500 + 50));
+
         ImGui::Begin("Image Manipulation", &open);
 
-        ImGui::Image((ImTextureID)(intptr_t)texture, ImVec2(500, 500));
+        ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x / (2 - 250), ImGui::GetWindowSize().y / (2 - 250)));
+        ImGui::Image((ImTextureID)(intptr_t)sdl_image_texture, ImVec2(500, 500));
+
+        if (ImGui::Button("Generate Image")) {
+            // std::cout << "Generating New Image: " << image_type_list[current_selected_image_type_index] << std::endl;
+            // generate_image(image_texture, parseSampleImageTypeString(image_type_list[current_selected_image_type_index]));
+            // generate_image(image_texture, SampleImageType::GRADIENT);
+            // sdl_image_texture = IMG_LoadTexture(renderer, image_texture.filename.c_str());
+        }
+
+        ImGui::Combo("Image Type", &current_selected_image_type_index, image_type_list, IM_ARRAYSIZE(image_type_list));
+
+        ImGui::SliderFloat("Image Noise", &noise_slider_value, 0.0f, 100.0f);
+
+        ImGui::InputText("Image Size", image_size, sizeof(image_size));
 
         ImGui::End();
 

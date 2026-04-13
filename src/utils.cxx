@@ -81,3 +81,27 @@ SampleImageType parseSampleImageTypeString(std::string type) {
 
     return SampleImageType::GRADIENT;
 }
+
+SampleImageType parseSampleImageTypeString(char* type) {
+
+    std::string type_str = type;
+
+    // Convert to lower case
+    std::transform(type_str.begin(), type_str.end(), type_str.begin(), ::tolower);
+
+    static const std::unordered_map<std::string, SampleImageType> type_strMap = {
+        {"gradient", SampleImageType::GRADIENT},
+        {"walker", SampleImageType::WALKER},
+        {"cloud", SampleImageType::CLOUD},
+        {"marble", SampleImageType::MARBLE},
+        {"wood", SampleImageType::WOOD},
+    };
+
+    auto it = type_strMap.find(type_str);
+
+    if (it != type_strMap.end()) {
+        return it->second;
+    }
+
+    return SampleImageType::GRADIENT;
+}

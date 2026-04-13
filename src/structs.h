@@ -10,3 +10,8 @@ struct Image {
     int height;
     std::vector<std::tuple<float, float, float>> image;
 };
+
+struct ImageTexture : Image {
+    std::vector<double> noise;
+    std::tuple<float, float, float> color;
+};

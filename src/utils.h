@@ -14,3 +14,5 @@ double turbulence(double x, double y, int width, int height, double size,
                   std::vector<double> &noise);
 
 SampleImageType parseSampleImageTypeString(std::string type);
+
+SampleImageType parseSampleImageTypeString(char *type);
