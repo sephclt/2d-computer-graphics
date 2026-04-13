@@ -195,8 +195,6 @@ int main(int, char**)
         ImGui_ImplSDL3_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::SetNextWindowSize(ImVec2(500 + 50, 500 + 50));
-
         ImGui::Begin("Image Manipulation", &open);
 
         ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x / (2 - 250), ImGui::GetWindowSize().y / (2 - 250)));
@@ -206,7 +204,8 @@ int main(int, char**)
             std::cout << "Generating New Image: " << image_type_list[current_selected_image_type_index] << std::endl;
             generate_image(image_texture, parseSampleImageTypeString(image_type_list[current_selected_image_type_index]));
             // generate_image(image_texture, SampleImageType::GRADIENT);
-            sdl_image_texture = IMG_LoadTexture(renderer, image_texture.filename.c_str());
+            // sdl_image_texture = IMG_LoadTexture(renderer, image_texture.filename.c_str());
+            sdl_image_texture = create_texture(renderer, image_texture);
         }
 
         ImGui::Combo("Image Type", &current_selected_image_type_index, image_type_list, IM_ARRAYSIZE(image_type_list));

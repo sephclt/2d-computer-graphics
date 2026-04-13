@@ -1,4 +1,8 @@
 #include "draw.h"
+#include "SDL3/SDL_oldnames.h"
+#include "SDL3/SDL_render.h"
+#include "SDL3/SDL_stdinc.h"
+#include "SDL3/SDL_surface.h"
 #include "file_manager.h"
 #include "logging.h"
 #include "structs.h"
@@ -422,3 +426,27 @@ static void update_x_and_y(int r, std::tuple<int, int> &walk1,
     walk1 = std::make_tuple(x1, y1);
     walk2 = std::make_tuple(x2, y2);
 };
+
+SDL_Texture *create_texture(SDL_Renderer *renderer, ImageTexture &image_texture) {
+    // Create a surface with 24-bit RGB format
+    SDL_Surface* surface = SDL_CreateSurface(image_texture.width, image_texture.height, SDL_PIXELFORMAT_RGB24);
+
+    if (!surface) return nullptr;
+
+    Uint8 *pixels = static_cast<Uint8*>(surface->pixels);
+
+    
+    for (int i = 0; i < image_texture.width * image_texture.height; ++i) {
+        auto [r, g, b] = image_texture.image[i];
+
+        // Convert float [0.0, 1.0] → Uint8 [0, 255]
+        pixels[i * 3 + 0] = static_cast<Uint8>(std::clamp(r, 0.0f, 1.0f) * 255.0f);
+        pixels[i * 3 + 1] = static_cast<Uint8>(std::clamp(g, 0.0f, 1.0f) * 255.0f);
+        pixels[i * 3 + 2] = static_cast<Uint8>(std::clamp(b, 0.0f, 1.0f) * 255.0f);
+    }
+
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_DestroySurface(surface);
+
+    return texture;
+}

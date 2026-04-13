@@ -1,5 +1,6 @@
 #pragma once
 
+#include "SDL3/SDL_render.h"
 #include "structs.h"
 #include <string>
 #include <tuple>
@@ -52,3 +53,5 @@ void generate_wood(std::vector<std::tuple<float, float, float>> &image,
                    int width, int height, std::vector<double> &noise);
 
 void generate_wood(ImageTexture &image_texture);
+
+SDL_Texture *create_texture(SDL_Renderer *renderer, ImageTexture &image_texture);
