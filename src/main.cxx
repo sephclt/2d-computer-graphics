@@ -142,7 +142,9 @@ int main(int, char**)
 
     // Main loop
     bool done = false;
-    bool open = true;
+    bool tools = true;
+    bool image_generation = false;
+    bool image_manipulation = false;
 
     float noise_slider_value = 0.0f;
     static char image_size[] = "500x500";
@@ -195,7 +197,17 @@ int main(int, char**)
         ImGui_ImplSDL3_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::Begin("Image Manipulation", &open);
+        ImGui::Begin("Tools", &tools);
+
+        if (ImGui::Button("Image Generation"))
+            image_generation = !image_generation;
+
+        if (ImGui::Button("Image Manipulation"))
+            image_manipulation = !image_manipulation;
+
+        ImGui::End();
+
+        ImGui::Begin("Image Generation", &image_generation);
 
         ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x / (2 - 250), ImGui::GetWindowSize().y / (2 - 250)));
         ImGui::Image((ImTextureID)(intptr_t)sdl_image_texture, ImVec2(500, 500));
@@ -209,6 +221,10 @@ int main(int, char**)
         }
 
         ImGui::Combo("Image Type", &current_selected_image_type_index, image_type_list, IM_ARRAYSIZE(image_type_list));
+
+        ImGui::End();
+
+        ImGui::Begin("Image Manipulation", &image_manipulation);
 
         ImGui::SliderFloat("Image Noise", &noise_slider_value, 0.0f, 100.0f);
 
