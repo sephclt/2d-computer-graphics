@@ -142,9 +142,9 @@ int main(int, char**)
 
     // Main loop
     bool done = false;
-    bool tools = true;
-    bool image_generation = false;
-    bool image_manipulation = false;
+    bool image_window = true;
+    bool image_generation = true;
+    bool image_manipulation = true;
 
     float noise_slider_value = 0.0f;
     static char image_size[] = "500x500";
@@ -197,20 +197,16 @@ int main(int, char**)
         ImGui_ImplSDL3_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::Begin("Tools", &tools);
+        // Image Tools Window
+        ImGui::Begin("Image", &image_window, ImGuiWindowFlags_AlwaysAutoResize);
 
-        if (ImGui::Button("Image Generation"))
-            image_generation = !image_generation;
-
-        if (ImGui::Button("Image Manipulation"))
-            image_manipulation = !image_manipulation;
+        ImGui::SetCursorPos(ImVec2((ImGui::GetWindowSize().x - 500) * 0.5f, (ImGui::GetWindowSize().y - 500) * 0.5f));
+        ImGui::Image((ImTextureID)(intptr_t)sdl_image_texture, ImVec2(500, 500));
 
         ImGui::End();
 
-        ImGui::Begin("Image Generation", &image_generation);
-
-        ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x / (2 - 250), ImGui::GetWindowSize().y / (2 - 250)));
-        ImGui::Image((ImTextureID)(intptr_t)sdl_image_texture, ImVec2(500, 500));
+        // Image Generation Window
+        ImGui::Begin("Image Generation", &image_generation, ImGuiWindowFlags_AlwaysAutoResize);
 
         if (ImGui::Button("Generate Image")) {
             std::cout << "Generating New Image: " << image_type_list[current_selected_image_type_index] << std::endl;
@@ -224,7 +220,8 @@ int main(int, char**)
 
         ImGui::End();
 
-        ImGui::Begin("Image Manipulation", &image_manipulation);
+        // Image Manipulation Window
+        ImGui::Begin("Image Manipulation", &image_manipulation, ImGuiWindowFlags_AlwaysAutoResize);
 
         ImGui::SliderFloat("Image Noise", &noise_slider_value, 0.0f, 100.0f);
 
