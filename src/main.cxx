@@ -157,6 +157,9 @@ int main(int, char**)
     image_texture.filename = "SampleImage.ppm";
     image_texture.width = 500;
     image_texture.height = 500;
+    image_texture.noise_value = 0.5;
+
+    ImageTexture image_texture_cache = image_texture;
 
     SDL_Texture* sdl_image_texture = IMG_LoadTexture(renderer, image_texture.filename.c_str());
 
@@ -197,6 +200,13 @@ int main(int, char**)
         ImGui_ImplSDL3_NewFrame();
         ImGui::NewFrame();
 
+        if (image_texture != image_texture_cache) {
+            std::cout << "Image Is Different\n";
+            generate_image(image_texture, parseSampleImageTypeString(image_type_list[current_selected_image_type_index]));
+            sdl_image_texture = create_texture(renderer, image_texture);
+            image_texture_cache = image_texture;
+        }
+
         // Image Tools Window
         ImGui::Begin("Image", &image_window, ImGuiWindowFlags_AlwaysAutoResize);
 
@@ -223,7 +233,7 @@ int main(int, char**)
         // Image Manipulation Window
         ImGui::Begin("Image Manipulation", &image_manipulation, ImGuiWindowFlags_AlwaysAutoResize);
 
-        ImGui::SliderFloat("Image Noise", &noise_slider_value, 0.0f, 100.0f);
+        ImGui::SliderFloat("Image Noise", &image_texture.noise_value, 0.0f, 100.0f);
 
         ImGui::InputText("Image Size", image_size, sizeof(image_size));
 
