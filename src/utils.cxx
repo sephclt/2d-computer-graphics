@@ -1,5 +1,6 @@
 #include "utils.h"
 #include "draw.h"
+#include "structs.h"
 #include <algorithm>
 #include <random>
 #include <string>
@@ -16,6 +17,18 @@ void generate_noise(std::vector<double> &noise, int width, int height) {
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             noise[get_index(x, y, width)] = dist(mt);
+        }
+    }
+}
+
+void generate_noise(ImageTexture &image_texture) {
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_real_distribution<> dist(0.0, 1.0);
+
+    for (int y = 0; y < image_texture.height; ++y) {
+        for (int x = 0; x < image_texture.width; ++x) {
+            image_texture.noise[get_index(x, y, image_texture.width)] = (image_texture.noise_value + dist(mt));
         }
     }
 }
