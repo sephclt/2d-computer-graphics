@@ -14,6 +14,7 @@
 // SDL+OpenGL on Linux/OSX.
 
 #include "SDL3/SDL_render.h"
+#include "SDL3/SDL_video.h"
 #include "SDL3_image/SDL_image.h"
 #include "draw.h"
 #include "imgui.h"
@@ -130,6 +131,8 @@ int main(int, char **) {
 
     float screen_width = io.DisplaySize.x;
     float screen_height = io.DisplaySize.y;
+    int width, height;
+    SDL_GetWindowSizeInPixels(window, &width, &height);
     float padding = 0.1f;
 
     float noise_slider_value = 0.0f;
@@ -219,8 +222,9 @@ int main(int, char **) {
         ImGui::End();
 
         // Image Generation Window
-        ImGui::SetNextWindowPos(ImVec2((screen_width * 0.5f) * padding,
-                                       (screen_height * 0.5f) * padding));
+        ImGui::SetNextWindowPos(
+            ImVec2((screen_width + (width * 0.5f)) * padding,
+                   screen_height * padding));
         ImGui::SetNextWindowSize(
             ImVec2(screen_width * 0.5f, screen_height * 0.5f));
         ImGui::Begin("Image Generation", &image_generation,
