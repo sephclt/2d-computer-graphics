@@ -157,7 +157,7 @@ int main(int, char**)
     image_texture.filename = "SampleImage.ppm";
     image_texture.width = 500;
     image_texture.height = 500;
-    image_texture.noise_value = 0.5;
+    image_texture.noise_value = 0.0f;
 
     ImageTexture image_texture_cache = image_texture;
 
@@ -224,6 +224,7 @@ int main(int, char**)
             // generate_image(image_texture, SampleImageType::GRADIENT);
             // sdl_image_texture = IMG_LoadTexture(renderer, image_texture.filename.c_str());
             sdl_image_texture = create_texture(renderer, image_texture);
+            image_texture_cache = image_texture;
         }
 
         ImGui::Combo("Image Type", &current_selected_image_type_index, image_type_list, IM_ARRAYSIZE(image_type_list));
