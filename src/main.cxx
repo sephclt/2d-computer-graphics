@@ -26,7 +26,6 @@
 #include <iostream>
 #include <stdio.h>
 #include <string>
-#include <tuple>
 
 #ifdef __EMSCRIPTEN__
 #include "../libs/emscripten/emscripten_mainloop_stub.h"
@@ -131,6 +130,7 @@ int main(int, char **) {
 
     float screen_width = io.DisplaySize.x;
     float screen_height = io.DisplaySize.y;
+    float padding = 0.1f;
 
     float noise_slider_value = 0.0f;
     static char image_size[] = "500x500";
@@ -204,8 +204,12 @@ int main(int, char **) {
             image_texture_cache = image_texture;
         }
 
-        // Image Tools Window
-        ImGui::Begin("Image", &image_window, ImGuiWindowFlags_AlwaysAutoResize);
+        // Image Window
+        ImGui::SetNextWindowPos(
+            ImVec2(screen_width * padding, screen_height * padding));
+        ImGui::SetNextWindowSize(
+            ImVec2(screen_width * 0.5f, screen_height * 0.5f));
+        ImGui::Begin("Image", &image_window);
 
         ImGui::SetCursorPos(ImVec2((ImGui::GetWindowSize().x - 500) * 0.5f,
                                    (ImGui::GetWindowSize().y - 500) * 0.5f));
@@ -215,6 +219,10 @@ int main(int, char **) {
         ImGui::End();
 
         // Image Generation Window
+        ImGui::SetNextWindowPos(ImVec2((screen_width * 0.5f) * padding,
+                                       (screen_height * 0.5f) * padding));
+        ImGui::SetNextWindowSize(
+            ImVec2(screen_width * 0.5f, screen_height * 0.5f));
         ImGui::Begin("Image Generation", &image_generation,
                      ImGuiWindowFlags_AlwaysAutoResize);
 
