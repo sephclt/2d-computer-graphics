@@ -68,7 +68,7 @@ void generate_image(ImageTexture &image_texture, SampleImageType imageType) {
 
     std::cout << "Generating Noise!\n";
     image_texture.noise.resize(image_texture.width * image_texture.height);
-    generate_noise(image_texture.noise, image_texture.width, image_texture.height);
+    generate_noise(image_texture);
 
     switch (imageType) {
         case SampleImageType::GRADIENT:
