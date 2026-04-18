@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project("2DComputerGraphics" VERSION 0.1)
 
 add_subdirectory(vendors)
+add_subdirectory(core)
 
 file(
     GLOB_RECURSE SOURCES
@@ -21,4 +22,5 @@ target_link_libraries(
     SDL3::SDL3
     SDL3_image::SDL3_image
     imgui
+    core
 )
