@@ -1,6 +1,9 @@
 add_library(
     core STATIC
     src/core.cxx
+    src/core_draw.cxx
+    src/core_file.cxx
+    src/core_log.cxx
 )
 
 target_include_directories(

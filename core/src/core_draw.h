@@ -21,8 +21,7 @@ void generate_wood(Image &image);
 
 void generate_noise(std::vector<double> &noise, ImageTexture &image_texture);
 
-SDL_Texture *create_texture(SDL_Renderer *renderer,
-                            ImageTexture &image_texture);
+SDL_Texture *create_texture(SDL_Renderer *renderer, Image &image_texture);
 
 } // namespace core_draw
 
