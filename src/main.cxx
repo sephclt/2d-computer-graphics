@@ -16,12 +16,11 @@
 #include "SDL3/SDL_render.h"
 #include "SDL3/SDL_video.h"
 #include "SDL3_image/SDL_image.h"
-#include "draw.h"
+#include "core.h"
+#include "core_draw.h"
 #include "imgui.h"
 #include "imgui_impl_sdl3.h"
 #include "imgui_impl_sdlrenderer3.h"
-#include "structs.h"
-#include "utils.h"
 #include <SDL3/SDL.h>
 #include <cstdint>
 #include <iostream>
@@ -142,13 +141,13 @@ int main(int, char **) {
     const char *image_type_list[] = {"gradient", "cloud", "wood", "marble"};
 
     // SETUP IMAGE TEXTURE
-    ImageTexture image_texture;
+    Image image_texture;
     image_texture.filename = "SampleImage.ppm";
     image_texture.width = 500;
     image_texture.height = 500;
     image_texture.noise_value = 0.0f;
 
-    ImageTexture image_texture_cache = image_texture;
+    Image image_texture_cache = image_texture;
 
     SDL_Texture *sdl_image_texture =
         IMG_LoadTexture(renderer, image_texture.filename.c_str());
@@ -197,13 +196,15 @@ int main(int, char **) {
         ImGui_ImplSDL3_NewFrame();
         ImGui::NewFrame();
 
-        if (image_texture != image_texture_cache) {
+        // if (image_texture != image_texture_cache) {
+        if (core::is_images_equal(image_texture, image_texture_cache)) {
             std::cout << "Image Is Different\n";
-            generate_image(
+            core_draw::generate_image(
                 image_texture,
-                parseSampleImageTypeString(
+                core::parseSampleImageTypeString(
                     image_type_list[current_selected_image_type_index]));
-            sdl_image_texture = create_texture(renderer, image_texture);
+            sdl_image_texture =
+                core_draw::create_texture(renderer, image_texture);
             image_texture_cache = image_texture;
         }
 
@@ -234,14 +235,15 @@ int main(int, char **) {
             std::cout << "Generating New Image: "
                       << image_type_list[current_selected_image_type_index]
                       << std::endl;
-            generate_image(
+            core_draw::generate_image(
                 image_texture,
-                parseSampleImageTypeString(
+                core::parseSampleImageTypeString(
                     image_type_list[current_selected_image_type_index]));
             // generate_image(image_texture, SampleImageType::GRADIENT);
             // sdl_image_texture = IMG_LoadTexture(renderer,
             // image_texture.filename.c_str());
-            sdl_image_texture = create_texture(renderer, image_texture);
+            sdl_image_texture =
+                core_draw::create_texture(renderer, image_texture);
             image_texture_cache = image_texture;
         }
 

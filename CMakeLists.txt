@@ -7,14 +7,15 @@ project("2DComputerGraphics" VERSION 0.1)
 
 add_subdirectory(vendors)
 add_subdirectory(core)
+add_subdirectory(src)
 
-file(
-    GLOB_RECURSE SOURCES
-    CONFIGURE_DEPENDS
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cxx"
-)
+# file(
+#     GLOB_RECURSE SOURCES
+#     CONFIGURE_DEPENDS
+#     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cxx"
+# )
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+# add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_link_libraries(
     ${PROJECT_NAME} PRIVATE
