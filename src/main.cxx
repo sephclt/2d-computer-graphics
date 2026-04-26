@@ -197,7 +197,7 @@ int main(int, char **) {
         ImGui::NewFrame();
 
         // if (image_texture != image_texture_cache) {
-        if (core::is_images_equal(image_texture, image_texture_cache)) {
+        if (!core::is_images_equal(image_texture, image_texture_cache)) {
             std::cout << "Image Is Different\n";
             core_draw::generate_image(
                 image_texture,

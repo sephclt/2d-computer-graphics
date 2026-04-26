@@ -11,13 +11,13 @@ void generate_image(Image &image, SampleImageType imageType);
 
 void clear_image(ImageTexture &image_texture);
 
-void generate_gradient(Image &image);
+void generate_gradient(ImageTexture &image_texture);
 
-void generate_cloud(Image &image);
+void generate_cloud(ImageTexture &image_texture, std::vector<double> &noise);
 
-void generate_marble(Image &image);
+void generate_marble(ImageTexture &image_texture, std::vector<double> &noise);
 
-void generate_wood(Image &image);
+void generate_wood(ImageTexture &image_texture, std::vector<double> &noise);
 
 void generate_noise(std::vector<double> &noise, ImageTexture &image_texture);
 

@@ -2,6 +2,36 @@
 #include "core_log.h"
 #include <fstream>
 
+bool core_file::start_with_case_insensitive(std::string line,
+                                            std::string to_match) {
+    // Convert to lower case
+    std::transform(line.begin(), line.end(), line.begin(), ::tolower);
+    std::transform(to_match.begin(), to_match.end(), to_match.begin(),
+                   ::tolower);
+
+    if (line.find(to_match) == 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+std::tuple<int, int> core_file::get_width_and_height(const std::string line) {
+    size_t start;
+    size_t end = 0;
+    std::vector<std::string> out;
+
+    while ((start = line.find_first_not_of(" ", end)) != std::string::npos) {
+        end = line.find(" ", start);
+        out.push_back(line.substr(start, end - start));
+    }
+
+    int w = std::stoi(out[0]);
+    int h = std::stoi(out[1]);
+
+    return std::make_tuple(w, h);
+}
+
 void core_file::save_image(Image &image) {
 
     std::tuple<float, float, float> color;
