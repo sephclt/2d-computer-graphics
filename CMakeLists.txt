@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 4.0)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project("2DComputerGraphics" VERSION 0.1)
+project("Imagenesis" VERSION 0.1)
 
 add_subdirectory(vendors)
 add_subdirectory(core)
