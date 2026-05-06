@@ -86,6 +86,17 @@ void core_file::save_image_png(Image &image) {
     }
 }
 
+void core_file::save_image_jpeg(Image &image) {
+    SDL_Surface *surface = core_draw::create_surface(image);
+
+    if (IMG_SaveJPG(surface, image.filename.c_str(), 1)) {
+        SDL_DestroySurface(surface);
+    } else {
+        core_log::print_message(std::format(
+            "Unexpected error saving JPEG image: {}", image.filename));
+    }
+}
+
 void core_file::read_image(Image &image) {
 
     std::ifstream infile(image.filename);

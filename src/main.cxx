@@ -142,8 +142,8 @@ int main(int, char **) {
 
     // SETUP IMAGE TEXTURE
     Image image_texture;
-    image_texture.filename = "SampleImage.png";
-    image_texture.filetype = ImageFiletype::PNG;
+    image_texture.filename = "SampleImage.jpg";
+    image_texture.filetype = ImageFiletype::JPEG;
     image_texture.width = 500;
     image_texture.height = 500;
     image_texture.noise_value = 0.0f;

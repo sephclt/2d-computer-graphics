@@ -19,6 +19,8 @@ void save_image_ppm(Image &image);
 
 void save_image_png(Image &image);
 
+void save_image_jpeg(Image &image);
+
 void read_image(Image &image);
 
 } // namespace core_file
