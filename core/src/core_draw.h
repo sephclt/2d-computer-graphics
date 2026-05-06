@@ -23,6 +23,8 @@ void generate_noise(std::vector<double> &noise, ImageTexture &image_texture);
 
 SDL_Texture *create_texture(SDL_Renderer *renderer, Image &image_texture);
 
+SDL_Surface *create_surface(ImageTexture &image_texture);
+
 } // namespace core_draw
 
 #endif // !CORE_DRAW_H

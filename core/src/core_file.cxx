@@ -1,5 +1,12 @@
 #include "core_file.h"
+#include "SDL3/SDL_render.h"
+#include "SDL3/SDL_surface.h"
+#include "SDL3_image/SDL_image.h"
+#include "core.h"
+#include "core_draw.h"
 #include "core_log.h"
+#include "imgui_impl_sdl3.h"
+#include <format>
 #include <fstream>
 
 bool core_file::start_with_case_insensitive(std::string line,
@@ -34,6 +41,19 @@ std::tuple<int, int> core_file::get_width_and_height(const std::string line) {
 
 void core_file::save_image(Image &image) {
 
+    switch (image.filetype) {
+    case ImageFiletype::PPM:
+        core_file::save_image_ppm(image);
+        break;
+    case ImageFiletype::PNG:
+        core_file::save_image_png(image);
+        break;
+    default:
+        return;
+    }
+}
+
+void core_file::save_image_ppm(Image &image) {
     std::tuple<float, float, float> color;
     std::ofstream out(image.filename, std::ofstream::out);
 
@@ -53,6 +73,17 @@ void core_file::save_image(Image &image) {
         std::format("Done Saving Image: {}", image.filename));
 
     out.close();
+}
+
+void core_file::save_image_png(Image &image) {
+    SDL_Surface *surface = core_draw::create_surface(image);
+
+    if (IMG_SavePNG(surface, image.filename.c_str())) {
+        SDL_DestroySurface(surface);
+    } else {
+        core_log::print_message(std::format(
+            "Unexpected error saving PNG image: {}", image.filename));
+    }
 }
 
 void core_file::read_image(Image &image) {

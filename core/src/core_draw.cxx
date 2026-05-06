@@ -1,4 +1,5 @@
 #include "core_draw.h"
+#include "SDL3/SDL_surface.h"
 #include "core.h"
 #include "core_file.h"
 #include "core_log.h"
@@ -201,6 +202,31 @@ SDL_Texture *core_draw::create_texture(SDL_Renderer *renderer,
     SDL_DestroySurface(surface);
 
     return texture;
+}
+
+SDL_Surface *core_draw::create_surface(ImageTexture &image_texture) {
+    // Create a surface with 24-bit RGB format
+    SDL_Surface *surface = SDL_CreateSurface(
+        image_texture.width, image_texture.height, SDL_PIXELFORMAT_RGB24);
+
+    if (!surface)
+        return nullptr;
+
+    Uint8 *pixels = static_cast<Uint8 *>(surface->pixels);
+
+    for (int i = 0; i < image_texture.width * image_texture.height; ++i) {
+        auto [r, g, b] = image_texture.texture[i];
+
+        // Convert float [0.0, 1.0] → Uint8 [0, 255]
+        pixels[i * 3 + 0] =
+            static_cast<Uint8>(std::clamp(r, 0.0f, 1.0f) * 255.0f);
+        pixels[i * 3 + 1] =
+            static_cast<Uint8>(std::clamp(g, 0.0f, 1.0f) * 255.0f);
+        pixels[i * 3 + 2] =
+            static_cast<Uint8>(std::clamp(b, 0.0f, 1.0f) * 255.0f);
+    }
+
+    return surface;
 }
 
 int get_index(int x, int y, int width) { return x + width * y; }

@@ -6,10 +6,11 @@
 #include <vector>
 
 enum SampleImageType : int;
+enum ImageFiletype : int;
 
 struct ImageFile {
     std::string filename;
-    std::string filetype;
+    ImageFiletype filetype;
     std::string dimensions;
 };
 
@@ -36,5 +37,7 @@ SampleImageType parseSampleImageTypeString(char *type);
 
 // sample image type for generating sample images
 enum SampleImageType : int { GRADIENT, CLOUD, MARBLE, WOOD };
+
+enum ImageFiletype : int { PPM, JPEG, PNG };
 
 #endif // !CORE_H
