@@ -4,6 +4,8 @@ add_library(
     src/core_draw.cxx
     src/core_file.cxx
     src/core_log.cxx
+    src/core_manipulation.cxx
+    src/core_utils.cxx
 )
 
 target_include_directories(
